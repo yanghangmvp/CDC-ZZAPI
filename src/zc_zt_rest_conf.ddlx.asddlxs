@@ -1,0 +1,91 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: '接口数据维护', 
+    typeNamePlural: '接口数据维护'
+  }
+}
+@Search.searchable: true
+annotate view ZC_ZT_REST_CONF with
+{
+  @UI.facet: [ {
+    id: 'idIdentification', 
+    type: #IDENTIFICATION_REFERENCE, 
+    label: '接口数据维护', 
+    position: 10 
+  } ,
+   { id: 'Append',
+                 type:#LINEITEM_REFERENCE,
+                 targetElement: '_append',
+                 label: '附加数据',
+                 position: 20
+                }]
+  @UI.lineItem: [ { position: 10 , importance: #MEDIUM } ]
+  @UI.identification: [ { position: 10  } ]
+  @UI.selectionField: [ { position: 10}]
+  @Search.defaultSearchElement: true
+  @Consumption.valueHelpDefinition: [{  entity: {name: 'ZR_VH_REST_NUM' , element: 'zznumb'  } }]
+  Zznumb;
+  
+  @UI.lineItem: [ {
+    position: 20 , 
+    importance: #MEDIUM
+  } ]
+  @UI.identification: [ {
+    position: 20 
+  } ]
+  Zzname;
+  
+  @UI.lineItem: [ {
+    position: 30 , 
+    importance: #MEDIUM
+  } ]
+  @UI.identification: [ {
+    position: 30 
+  } ]
+  Zzisst;
+  
+  @UI.lineItem: [ {
+    position: 40 , 
+    importance: #MEDIUM
+  } ]
+  @UI.identification: [ {
+    position: 40 
+  } ]
+  Zzfname;
+  
+  @UI.lineItem: [ {
+    position: 50 , 
+    importance: #MEDIUM
+  } ]
+  @UI.identification: [ {
+    position: 50 
+  } ]
+  Zzipara;
+  
+  @UI.lineItem: [ {
+    position: 60 , 
+    importance: #MEDIUM
+  } ]
+  @UI.identification: [ {
+    position: 60 
+  } ]
+  Zzopara;
+  
+  @UI.lineItem: [ { position: 70 , importance: #MEDIUM } ]
+  @UI.identification: [ { position: 70  } ]
+  @Consumption.valueHelpDefinition: [{  entity: {name: 'ZR_VH_REST_SYSID' , element: 'zztsysid'  } }]
+  ZztsysID;
+  
+  @UI.lineItem: [ {
+    position: 80 , 
+    importance: #MEDIUM
+  } ]
+  @UI.identification: [ {
+    position: 80 
+  } ]
+  Zzurlp;
+  
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

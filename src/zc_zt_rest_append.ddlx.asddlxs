@@ -1,0 +1,50 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: '附加数据维护',
+    typeNamePlural: '附加数据维护'
+  }
+}
+annotate view ZC_ZT_REST_APPEND with
+{
+  @UI.facet: [ {
+    id: 'idIdentification',
+    type: #IDENTIFICATION_REFERENCE,
+    label: '附加数据维护',
+    position: 10
+  } ]
+  @UI.lineItem: [ { position: 10 , importance: #MEDIUM } ]
+  @UI.identification: [ {position: 10 } ]
+  @Consumption.valueHelpDefinition: [{  entity: {name: 'ZR_VH_REST_NUM' , element: 'zznumb'  }}]
+  Zznumb;
+
+  @UI.lineItem: [ {
+    position: 20 ,
+    importance: #MEDIUM
+  } ]
+  @UI.identification: [ {
+    position: 20
+  } ]
+  Zzappac;
+
+  @UI.lineItem: [ {
+    position: 30 ,
+    importance: #MEDIUM
+  } ]
+  @UI.identification: [ {
+    position: 30
+  } ]
+  Zzappkey;
+
+  @UI.lineItem: [ {
+    position: 40 ,
+    importance: #MEDIUM
+  } ]
+  @UI.identification: [ {
+    position: 40
+  } ]
+  Zzappvalue;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

@@ -1,0 +1,4 @@
+@EndUserText.label: 'API日志'
+define service ZUI_ZT_REST_LOG_O4 {
+  expose ZC_ZT_REST_LOG;
+}

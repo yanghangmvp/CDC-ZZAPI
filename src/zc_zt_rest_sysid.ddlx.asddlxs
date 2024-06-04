@@ -1,0 +1,73 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: '第三方系统维护',
+    typeNamePlural: '第三方系统维护'
+  }
+}
+@Search.searchable: true
+annotate view ZC_ZT_REST_SYSID with
+{
+  @UI.facet: [ { id: 'idIdentification',
+                 type: #IDENTIFICATION_REFERENCE,
+                 label: '第三方系统维护',
+                 position: 10
+                } ,
+               { id              :   'BASIS',
+                 targetQualifier :   'BASIS_FG',
+                 purpose         :   #STANDARD,
+                 type            :   #FIELDGROUP_REFERENCE,
+                 label           :   '基本认证',
+                 position        :   20
+               },
+               { id              :   'OAUTH',
+                 targetQualifier :   'OAUTH_FG',
+                 purpose         :   #STANDARD,
+                 type            :   #FIELDGROUP_REFERENCE,
+                 label           :   'TOKEN认证',
+                 position        :   30
+               }
+                ]
+  @UI.lineItem: [ { position: 10 ,importance: #MEDIUM} ]
+  @UI.identification: [ { position: 10 } ]
+  @Search.defaultSearchElement: true
+  ZztsysID;
+
+  @UI.lineItem: [ { position: 20 ,importance: #MEDIUM } ]
+  @UI.identification: [ {  position: 20 } ]
+  Zztsysnm;
+
+  @UI.lineItem: [ { position: 30 ,importance: #MEDIUM } ]
+  @UI.identification: [ { position: 30} ]
+  Zzurl;
+
+  @UI.identification: [ { position: 40 } ]
+  Zzfname;
+
+  @UI.lineItem: [ { position: 50 , importance: #MEDIUM } ]
+  @UI.identification: [ { position: 50  } ]
+  Zzauty;
+
+  @UI.fieldGroup: [ { position: 10, qualifier: 'BASIS_FG',label: '用户名' } ]
+  Zzuser;
+
+  @UI.fieldGroup: [ { position: 210, qualifier: 'BASIS_FG',label: '密码' } ]
+  @UI.masked: true
+  Zzpwd;
+
+  @UI.fieldGroup: [ { position: 10, qualifier: 'OAUTH_FG'} ]
+  Zztkurl;
+
+  @UI.fieldGroup: [ { position: 20, qualifier: 'OAUTH_FG'} ]
+  ZzctID;
+
+  @UI.fieldGroup: [ { position: 30, qualifier: 'OAUTH_FG'} ]
+  @UI.masked: true
+  Zzctsecret;
+
+  @UI.fieldGroup: [ { position: 40, qualifier: 'OAUTH_FG'} ]
+  zzscope;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

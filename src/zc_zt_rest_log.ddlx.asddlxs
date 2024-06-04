@@ -1,0 +1,94 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: '接口日志查看',
+    typeNamePlural: '接口日志查看'
+  },
+   lineItem  : [{ criticality: 'CriticalityLine'}]
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'bdate', direction: #DESC }] }]
+@Search.searchable: true
+annotate view ZC_ZT_REST_LOG with
+{
+  @UI.facet: [ { id: 'idIdentification',
+                 type: #IDENTIFICATION_REFERENCE,
+                 label: '日志查看',
+                 position: 10
+                } ,
+               { id              :   'TIME',
+                 targetQualifier :   'TIME_FG',
+                 purpose         :   #STANDARD,
+                 type            :   #FIELDGROUP_REFERENCE,
+                 label           :   '执行信息',
+                 position        :   20
+               },
+               { id              :   'LOG',
+                 targetQualifier :   'LOG_FG',
+                 purpose         :   #STANDARD,
+                 type            :   #FIELDGROUP_REFERENCE,
+                 label           :   '报文信息',
+                 position        :   30
+               }
+               ]
+  @UI.lineItem: [ { position: 10 , importance: #MEDIUM } ]
+  @UI.identification: [ {position: 10 } ]
+  @UI.selectionField: [ { position: 10}]
+  @Search.defaultSearchElement: true
+  uuid;
+  @UI.lineItem: [ { position: 20 , importance: #MEDIUM } ]
+  @UI.identification: [ {position: 20 } ]
+  @UI.selectionField: [ { position: 20}]
+  zzfsysid;
+  @UI.lineItem: [ { position: 30 , importance: #MEDIUM } ]
+  @UI.identification: [ {position: 30 } ]
+  @UI.selectionField: [ { position: 30}]
+  zztsysid;
+  @UI.lineItem: [ { position: 40 , importance: #MEDIUM } ]
+  @UI.identification: [ {position: 40 } ]
+  @UI.selectionField: [ { position: 40}]
+  @Consumption.valueHelpDefinition: [{  entity: {name: 'ZR_VH_REST_NUM' , element: 'zznumb'  }}]
+  zznumb;
+  @UI.lineItem: [ { position: 50 , importance: #MEDIUM } ]
+  @UI.identification: [ {position: 50 } ]
+  @UI.hidden: true
+  zzname;
+
+  @UI.fieldGroup: [ { position: 10, qualifier: 'LOG_FG',label: '请求报文' } ]
+  zzrequest;
+
+  @UI.fieldGroup: [ { position: 20, qualifier: 'LOG_FG',label: '响应报文' } ]
+  zzresponse;
+  @UI.lineItem: [ { position: 80 , importance: #MEDIUM } ]
+  @UI.identification: [ {position: 80 } ]
+  @EndUserText.label:'SAP号码'
+  zzsapn;
+  @UI.lineItem: [ { position: 90 , importance: #MEDIUM } ]
+  @UI.identification: [ {position: 90 } ]
+  @EndUserText.label:'成功/失败'
+  msgty;
+  @UI.lineItem: [ { position: 100 , importance: #MEDIUM } ]
+  @UI.identification: [ {position: 100 } ]
+  @EndUserText.label:'执行人'
+  ernam;
+  @UI.lineItem: [ { position: 110 } ]
+  @UI.fieldGroup: [ { position: 10, qualifier: 'TIME_FG',label: '开始日期' } ]
+  @EndUserText.label:'开始日期'
+  @UI.selectionField: [ { position: 50 }]
+  bdate;
+  @UI.lineItem: [ { position: 120  } ]
+  @UI.fieldGroup: [ { position: 20, qualifier: 'TIME_FG',label: '开始时间' } ]
+  @EndUserText.label:'开始时间'
+  @UI.selectionField: [ { position: 60}]
+  btime;
+  @UI.lineItem: [ { position: 130  } ]
+  @UI.fieldGroup: [ { position: 30, qualifier: 'TIME_FG',label: '结束日期' } ]
+  @EndUserText.label:'结束日期'
+  rdate;
+  @UI.lineItem: [ { position: 140 } ]
+  @UI.fieldGroup: [ { position: 40, qualifier: 'TIME_FG',label: '结束时间' } ]
+  @EndUserText.label:'结束时间'
+  rtime;
+  @UI.hidden: true
+  CriticalityLine;
+
+}

@@ -1,0 +1,96 @@
+managed implementation in class ZBP_R_ZT_REST_CONF unique;
+//strict(2);
+with draft;
+define behavior for ZR_ZT_REST_CONF alias conf
+persistent table zzt_rest_conf
+draft table zzt_rest_conf_d
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global )
+
+{
+  field ( mandatory : create )
+  Zznumb;
+
+  field ( readonly )
+  CreatedAt,
+  CreatedBy,
+  LastChangedAt,
+  LastChangedBy,
+  LocalLastChangedAt;
+
+  field ( readonly : update )
+  Zznumb;
+
+  create;
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  association _append{ create (features: instance); }
+
+  mapping for zzt_rest_conf
+    {
+      Zznumb             = zznumb;
+      Zzname             = zzname;
+      Zzisst             = zzisst;
+      Zzfname            = zzfname;
+      Zzipara            = zzipara;
+      Zzopara            = zzopara;
+      ZztsysID           = zztsysid;
+      Zzurlp             = zzurlp;
+      CreatedBy          = created_by;
+      CreatedAt          = created_at;
+      LastChangedBy      = last_changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+}
+define behavior for ZR_ZT_REST_APPEND alias append
+persistent table zzt_rest_append
+draft table zzt_rest_appen_d
+lock dependent by _conf
+authorization dependent by _conf
+{
+  field ( mandatory : create )
+  Zznumb,
+  Zzappac,
+  Zzappkey;
+
+  field ( readonly )
+  CreatedAt,
+  CreatedBy,
+  LastChangedAt,
+  LastChangedBy,
+  LocalLastChangedAt;
+
+  field ( readonly : update )
+  Zznumb,
+  Zzappac,
+  Zzappkey;
+
+  update;
+  delete;
+
+
+  mapping for zzt_rest_append
+    {
+      Zznumb             = zznumb;
+      Zzappac            = zzappac;
+      Zzappkey           = zzappkey;
+      Zzappvalue         = zzappvalue;
+      CreatedBy          = created_by;
+      CreatedAt          = created_at;
+      LastChangedBy      = last_changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+
+  association _conf;
+
+}
