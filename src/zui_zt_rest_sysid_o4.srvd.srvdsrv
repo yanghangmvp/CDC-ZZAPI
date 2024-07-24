@@ -1,4 +1,4 @@
 @EndUserText.label: 'Service definition for ZC_ZT_REST_SYSID'
 define service ZUI_ZT_REST_SYSID_O4 {
-  expose ZC_ZT_REST_SYSID;
+  expose ZC_ZT_REST_SYSID as sysid;
 }

@@ -33,7 +33,8 @@ ENDCLASS.
 
 
 
-CLASS zzcl_rest_api IMPLEMENTATION.
+CLASS ZZCL_REST_API IMPLEMENTATION.
+
 
   METHOD constructor.
 
@@ -124,6 +125,7 @@ CLASS zzcl_rest_api IMPLEMENTATION.
     ls_log-ernam = sy-uname.
     ls_log-bdate = sy-datum.
     ls_log-btime = sy-uzeit.
+    GET TIME STAMP FIELD ls_log-btstmpl.
 
     me->zzif_rest_api~set_log( iv_log = ls_log ).
 
@@ -206,6 +208,7 @@ CLASS zzcl_rest_api IMPLEMENTATION.
     ls_log-zzname = gs_fconf-zzname.
     ls_log-rdate = sy-datum.
     ls_log-rtime = sy-uzeit.
+    GET TIME STAMP FIELD ls_log-rtstmpl.
     ls_log-zzresponse =  /ui2/cl_json=>string_to_raw( EXPORTING iv_string = o_json ).
 
     ls_log-zzsapn = g_sapnum.
@@ -218,18 +221,6 @@ CLASS zzcl_rest_api IMPLEMENTATION.
       ENDIF.
     ENDIF.
     me->zzif_rest_api~set_log( iv_log = ls_log ).
-  ENDMETHOD.
-
-  METHOD zzif_rest_api~set_log.
-    DATA:ls_log TYPE zzt_rest_log.
-    ls_log = iv_log.
-    TRY.
-        MODIFY zzt_rest_log FROM @ls_log.
-      CATCH cx_root INTO DATA(lr_root).
-        DATA(lv_message) = lr_root->get_text( ).
-    ENDTRY.
-
-    me->zzif_rest_api~ms_log = ls_log.
   ENDMETHOD.
 
 
@@ -270,6 +261,7 @@ CLASS zzcl_rest_api IMPLEMENTATION.
     ls_log-ernam   = sy-uname.
     ls_log-bdate   = sy-datum.
     ls_log-btime   = sy-uzeit.
+    GET TIME STAMP FIELD ls_log-btstmpl.
     me->zzif_rest_api~set_log( iv_log = ls_log ).
 
     TRY.
@@ -367,9 +359,11 @@ CLASS zzcl_rest_api IMPLEMENTATION.
     ENDTRY.
   ENDMETHOD.
 
+
   METHOD zzif_rest_api~reqtrans.
 
   ENDMETHOD.
+
 
   METHOD zzif_rest_api~restrans.
     DATA:ls_log TYPE zzt_rest_log.
@@ -379,8 +373,21 @@ CLASS zzcl_rest_api IMPLEMENTATION.
 
     ls_log-rdate    = sy-datum.
     ls_log-rtime    = sy-uzeit.
+    GET TIME STAMP FIELD ls_log-rtstmpl.
     ls_log-zzresponse = lv_json.
     me->zzif_rest_api~set_log( iv_log = ls_log ).
   ENDMETHOD.
 
+
+  METHOD zzif_rest_api~set_log.
+    DATA:ls_log TYPE zzt_rest_log.
+    ls_log = iv_log.
+    TRY.
+        MODIFY zzt_rest_log FROM @ls_log.
+      CATCH cx_root INTO DATA(lr_root).
+        DATA(lv_message) = lr_root->get_text( ).
+    ENDTRY.
+
+    me->zzif_rest_api~ms_log = ls_log.
+  ENDMETHOD.
 ENDCLASS.

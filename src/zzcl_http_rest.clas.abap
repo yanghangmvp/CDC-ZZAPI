@@ -11,7 +11,7 @@ ENDCLASS.
 
 
 
-CLASS zzcl_http_rest IMPLEMENTATION.
+CLASS ZZCL_HTTP_REST IMPLEMENTATION.
 
 
   METHOD if_http_service_extension~handle_request.

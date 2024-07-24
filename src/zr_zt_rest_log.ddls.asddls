@@ -23,11 +23,13 @@ define root view entity ZR_ZT_REST_LOG
       ernam,
       bdate,
       btime,
+      btstmpl,
       rdate,
       rtime,
+      rtstmpl,
       mimetype                       as mimeType,
-      concat(zznumb,'-Request.txt')  as requestName,
-      concat(zznumb,'-Response.txt') as responseName,
+      concat(uuid,'-Request.txt')  as requestName,
+      concat(uuid,'-Response.txt') as responseName,
       case msgty when 'S' then 3
       else 2 end                     as CriticalityLine //1 Red 2 Yellow 3 Green
 

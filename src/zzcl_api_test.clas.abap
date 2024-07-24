@@ -11,7 +11,9 @@ ENDCLASS.
 
 
 
-CLASS zzcl_api_test IMPLEMENTATION.
+CLASS ZZCL_API_TEST IMPLEMENTATION.
+
+
   METHOD if_oo_adt_classrun~main .
 
     CALL FUNCTION 'ZZFM_DEMO_OUT'.

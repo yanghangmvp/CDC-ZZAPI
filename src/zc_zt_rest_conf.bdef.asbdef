@@ -1,5 +1,5 @@
 projection;
-//strict;
+strict;
 use draft;
 define behavior for ZC_ZT_REST_CONF
 use etag

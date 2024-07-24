@@ -6,7 +6,9 @@
   },
    lineItem  : [{ criticality: 'CriticalityLine'}]
 }
-@UI.presentationVariant: [{ sortOrder: [{ by: 'bdate', direction: #DESC }] }]
+@UI.presentationVariant: [{ sortOrder: [{ by: 'btstmpl', direction: #DESC } ],
+                           visualizations:[ { type: #AS_LINEITEM } ]
+                         }]
 @Search.searchable: true
 annotate view ZC_ZT_REST_LOG with
 {
@@ -70,24 +72,34 @@ annotate view ZC_ZT_REST_LOG with
   @UI.identification: [ {position: 100 } ]
   @EndUserText.label:'执行人'
   ernam;
-  @UI.lineItem: [ { position: 110 } ]
-  @UI.fieldGroup: [ { position: 10, qualifier: 'TIME_FG',label: '开始日期' } ]
-  @EndUserText.label:'开始日期'
-  @UI.selectionField: [ { position: 50 }]
-  bdate;
-  @UI.lineItem: [ { position: 120  } ]
+//  @UI.lineItem: [ { position: 41 } ]
+//  @UI.fieldGroup: [ { position: 10, qualifier: 'TIME_FG',label: '开始日期' } ]
+//  @EndUserText.label:'开始日期'
+//  @UI.selectionField: [ { position: 50 }]
+//  bdate;
+//  @UI.lineItem: [ { position: 42  } ]
+//  @UI.fieldGroup: [ { position: 20, qualifier: 'TIME_FG',label: '开始时间' } ]
+//  @EndUserText.label:'开始时间'
+//  @UI.selectionField: [ { position: 60}]
+//  btime;
+  @UI.lineItem: [ { position: 43  } ]
   @UI.fieldGroup: [ { position: 20, qualifier: 'TIME_FG',label: '开始时间' } ]
   @EndUserText.label:'开始时间'
   @UI.selectionField: [ { position: 60}]
-  btime;
-  @UI.lineItem: [ { position: 130  } ]
-  @UI.fieldGroup: [ { position: 30, qualifier: 'TIME_FG',label: '结束日期' } ]
-  @EndUserText.label:'结束日期'
-  rdate;
+  btstmpl;
+//  @UI.lineItem: [ { position: 130  } ]
+//  @UI.fieldGroup: [ { position: 30, qualifier: 'TIME_FG',label: '结束日期' } ]
+//  @EndUserText.label:'结束日期'
+//  rdate;
+//  @UI.lineItem: [ { position: 140 } ]
+//  @UI.fieldGroup: [ { position: 40, qualifier: 'TIME_FG',label: '结束时间' } ]
+//  @EndUserText.label:'结束时间'
+//  rtime;
   @UI.lineItem: [ { position: 140 } ]
   @UI.fieldGroup: [ { position: 40, qualifier: 'TIME_FG',label: '结束时间' } ]
-  @EndUserText.label:'结束时间'
-  rtime;
+  @UI.selectionField: [ { position: 70}]
+  @EndUserText.label:'结束时间' 
+  rtstmpl;
   @UI.hidden: true
   CriticalityLine;
 

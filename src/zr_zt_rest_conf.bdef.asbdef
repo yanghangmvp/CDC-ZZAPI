@@ -1,5 +1,5 @@
 managed implementation in class ZBP_R_ZT_REST_CONF unique;
-//strict(2);
+strict;
 with draft;
 define behavior for ZR_ZT_REST_CONF alias conf
 persistent table zzt_rest_conf
