@@ -22,6 +22,16 @@ CLASS zzcl_comm_tool DEFINITION
       RETURNING
         VALUE(rv_iso) TYPE string.
 
+    CLASS-METHODS get_dest
+      RETURNING
+        VALUE(rv_dest) TYPE REF TO if_http_destination.
+    "单位转外码
+    CLASS-METHODS conv_uom
+      IMPORTING
+        iv_uom        TYPE msehi
+      RETURNING
+        VALUE(rv_uom) TYPE i_unitofmeasuretext-UnitOfMeasureCommercialName.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -29,6 +39,20 @@ ENDCLASS.
 
 
 CLASS ZZCL_COMM_TOOL IMPLEMENTATION.
+
+
+  METHOD conv_uom.
+    DATA lv_uom TYPE msehi.
+    lv_uom = iv_uom.
+    DATA(lo_uom) = cl_uom_maintenance=>get_instance( ).
+    TRY.
+        lo_uom->read( EXPORTING unit = lv_uom
+                      IMPORTING unit_st = DATA(ls_unit) ).
+        rv_uom = ls_unit-commercial.
+      CATCH cx_uom_error.
+        CHECK 1 = 1.
+    ENDTRY.
+  ENDMETHOD.
 
 
   METHOD date2iso.
@@ -41,6 +65,38 @@ CLASS ZZCL_COMM_TOOL IMPLEMENTATION.
         lv_date = lv_date+0(4) && '-' && lv_date+4(2) && '-' && lv_date+6(2) && 'T00:00:00'.
         rv_iso  =  lv_date .
       CATCH cx_root INTO DATA(lr_root).
+        CHECK 1 = 1.
+    ENDTRY.
+  ENDMETHOD.
+
+
+  METHOD get_dest.
+
+*&---定义场景使用变量
+    DATA: lr_cscn TYPE if_com_scenario_factory=>ty_query-cscn_id_range.
+*&---Find CA by Scenario ID
+    lr_cscn = VALUE #( ( sign = 'I' option = 'EQ' low = 'YY1_API' ) ).
+*&---创建实例
+    DATA(lo_factory) = cl_com_arrangement_factory=>create_instance( ).
+    lo_factory->query_ca(
+            EXPORTING
+              is_query           = VALUE #( cscn_id_range = lr_cscn )
+            IMPORTING
+              et_com_arrangement = DATA(lt_ca) ).
+    IF lt_ca IS INITIAL.
+      EXIT.
+    ENDIF.
+
+*&---take the first one
+    READ TABLE lt_ca INTO DATA(lo_ca) INDEX 1.
+*&---get destination based on Communication Arrangement and the service ID
+    TRY.
+        rv_dest = cl_http_destination_provider=>create_by_comm_arrangement(
+                    comm_scenario  = 'YY1_API'
+                    service_id     = 'YY1_API_REST'
+                    comm_system_id = lo_ca->get_comm_system_id( ) ).
+      CATCH cx_http_dest_provider_error INTO DATA(lx_http_dest_provider_error).
+        EXIT.
     ENDTRY.
   ENDMETHOD.
 
@@ -61,6 +117,7 @@ CLASS ZZCL_COMM_TOOL IMPLEMENTATION.
 
         rv_timestamp = lv_stamp.
       CATCH cx_root INTO DATA(lr_root).
+       CHECK 1 = 1.
     ENDTRY.
 
   ENDMETHOD.
