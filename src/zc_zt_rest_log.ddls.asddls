@@ -22,6 +22,7 @@ define root view entity ZC_ZT_REST_LOG
       rdate,
       rtime,
       rtstmpl,
+      ctstmpl,
       mimeType,
       requestName,
       responseName,

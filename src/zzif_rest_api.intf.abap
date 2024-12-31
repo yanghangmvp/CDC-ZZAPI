@@ -5,7 +5,7 @@ INTERFACE zzif_rest_api
 
   METHODS set_log
     IMPORTING
-      iv_log TYPE zzt_rest_log OPTIONAL .
+      is_log TYPE zzt_rest_log OPTIONAL .
 
   METHODS reqtrans
     CHANGING
@@ -13,8 +13,9 @@ INTERFACE zzif_rest_api
 
   METHODS restrans
     IMPORTING
-      iv_json  TYPE string OPTIONAL
+      iv_json       TYPE string OPTIONAL
     CHANGING
-      cv_msgty TYPE bapi_mtype OPTIONAL
-      cv_msgtx TYPE bapi_msg OPTIONAL .
+      cv_msgty      TYPE bapi_mtype OPTIONAL
+      cv_msgtx      TYPE bapi_msg OPTIONAL
+      VALUE(cs_log) TYPE zzt_rest_log . "#EC CI_VALPAR
 ENDINTERFACE.

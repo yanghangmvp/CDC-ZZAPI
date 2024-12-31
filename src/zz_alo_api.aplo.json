@@ -1,0 +1,14 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "API后台推送ALO",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "subobjects": [
+    {
+      "name": "ZZ_ALO_API_SUB",
+      "description": "API后台推送JOB"
+    }
+  ]
+}

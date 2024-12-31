@@ -11,12 +11,12 @@ define root view entity ZR_ZT_REST_LOG
       @Semantics.largeObject:
       { mimeType: 'mimeType',
       fileName: 'requestName',
-      contentDispositionPreference: #ATTACHMENT }
+      contentDispositionPreference: #INLINE }
       zzrequest,
       @Semantics.largeObject:
       { mimeType: 'mimeType',
       fileName: 'responseName',
-      contentDispositionPreference: #ATTACHMENT }
+      contentDispositionPreference: #INLINE }
       zzresponse,
       zzsapn,
       msgty,
@@ -27,10 +27,11 @@ define root view entity ZR_ZT_REST_LOG
       rdate,
       rtime,
       rtstmpl,
+      ctstmpl,
       mimetype                       as mimeType,
       concat(uuid,'-Request.txt')  as requestName,
       concat(uuid,'-Response.txt') as responseName,
       case msgty when 'S' then 3
-      else 2 end                     as CriticalityLine //1 Red 2 Yellow 3 Green
+      else 1 end                     as CriticalityLine //1 Red 2 Yellow 3 Green
 
 }

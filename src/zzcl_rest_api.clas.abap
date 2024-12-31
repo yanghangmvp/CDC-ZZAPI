@@ -1,6 +1,6 @@
 CLASS zzcl_rest_api DEFINITION
   PUBLIC
-  FINAL
+
   CREATE PUBLIC .
 
   PUBLIC SECTION.
@@ -16,13 +16,15 @@ CLASS zzcl_rest_api DEFINITION
       CHANGING
         o_json TYPE string .
     "传出方法
-    METHODS outbound
+    METHODS outbound                                     "#EC CI_VALPAR
       IMPORTING
-        VALUE(iv_data) TYPE data OPTIONAL
+        VALUE(iv_uuid) TYPE zzeuuid OPTIONAL
+        VALUE(iv_data) TYPE string OPTIONAL
       CHANGING
-        ev_resp        TYPE string
+        ev_resp        TYPE string                       "#EC CI_VALPAR
         ev_msgty       TYPE bapi_mtype
         ev_msgtx       TYPE bapi_msg .
+
     "获取token
     METHODS token
       RETURNING
@@ -33,7 +35,7 @@ ENDCLASS.
 
 
 
-CLASS ZZCL_REST_API IMPLEMENTATION.
+CLASS zzcl_rest_api IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -127,7 +129,7 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
     ls_log-btime = sy-uzeit.
     GET TIME STAMP FIELD ls_log-btstmpl.
 
-    me->zzif_rest_api~set_log( iv_log = ls_log ).
+    me->zzif_rest_api~set_log( is_log = ls_log ).
 
     IF g_ecode = 0.
       TRY .
@@ -220,7 +222,7 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
         ls_log-msgty = <fs_value>.
       ENDIF.
     ENDIF.
-    me->zzif_rest_api~set_log( iv_log = ls_log ).
+    me->zzif_rest_api~set_log( is_log = ls_log ).
   ENDMETHOD.
 
 
@@ -231,23 +233,27 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
     DATA:ls_log TYPE zzt_rest_log,
          ls_out TYPE zzs_rest_out.
 
-    "请求消息转换
-    me->zzif_rest_api~reqtrans(
-    CHANGING
-      cv_data = iv_data
-    ).
+*    "请求消息转换
+*    me->zzif_rest_api~reqtrans(
+*    CHANGING
+*      cv_data = iv_data
+*    ).
+*
+*    lv_json = /ui2/cl_json=>serialize( EXPORTING data        = iv_data
+*                                                 pretty_name = 'X' ).
 
-    lv_json = /ui2/cl_json=>serialize( EXPORTING data        = iv_data
-                                                 pretty_name = 'X' ).
+    lv_json = iv_data.
 
-
-
-    IF me->zzif_rest_api~ms_log-uuid IS INITIAL.
+    IF iv_uuid IS INITIAL.
       TRY .
           DATA(lv_uuid_c32) = cl_system_uuid=>if_system_uuid_static~create_uuid_c32( ).
           me->zzif_rest_api~ms_log-uuid = lv_uuid_c32.
         CATCH cx_uuid_error.
+          IF 1 = 1 .
+          ENDIF.
       ENDTRY.
+    ELSE.
+      me->zzif_rest_api~ms_log-uuid  = iv_uuid.
     ENDIF.
 
     ls_out-uuid     = me->zzif_rest_api~ms_log-uuid.
@@ -256,13 +262,13 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
     ls_log-zzname   = me->zzif_rest_api~ms_conf-zzname.
     ls_log-zzfsysid  = 'SAP'.
     ls_log-zztsysid  = me->zzif_rest_api~ms_conf-zztsysid.
-    ls_log-zzrequest = lv_json.
+    ls_log-zzrequest = /ui2/cl_json=>string_to_raw( EXPORTING iv_string   = lv_json ).
     ls_log-mimetype = 'application/json'.
     ls_log-ernam   = sy-uname.
     ls_log-bdate   = sy-datum.
     ls_log-btime   = sy-uzeit.
     GET TIME STAMP FIELD ls_log-btstmpl.
-    me->zzif_rest_api~set_log( iv_log = ls_log ).
+    me->zzif_rest_api~set_log( is_log = ls_log ).
 
     TRY.
         lr_client = cl_web_http_client_manager=>create_by_http_destination(
@@ -300,6 +306,8 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
         DATA(status) = lo_response->get_status( ).
         DATA(lv_res) = lo_response->get_text( ).
 
+        ls_log-zzresponse =  /ui2/cl_json=>string_to_raw( EXPORTING iv_string   = lv_res ).
+
         ev_resp = lv_res.
         "返回消息转换
         me->zzif_rest_api~restrans(
@@ -308,11 +316,13 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
           CHANGING
              cv_msgty = ev_msgty
              cv_msgtx = ev_msgtx
+             cs_log = ls_log
               ).
         "关闭连接
         CALL METHOD lr_client->close.
       CATCH cx_web_http_client_error cx_http_dest_provider_error.
-        "Handle exception here.
+        IF 1 = 1 .
+        ENDIF.
     ENDTRY.
   ENDMETHOD.
 
@@ -355,7 +365,8 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
         CALL METHOD lr_client->close.
 
       CATCH cx_web_http_client_error cx_http_dest_provider_error.
-        "Handle exception here.
+        IF 1 = 1 .
+        ENDIF.
     ENDTRY.
   ENDMETHOD.
 
@@ -374,14 +385,13 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
     ls_log-rdate    = sy-datum.
     ls_log-rtime    = sy-uzeit.
     GET TIME STAMP FIELD ls_log-rtstmpl.
-    ls_log-zzresponse = lv_json.
-    me->zzif_rest_api~set_log( iv_log = ls_log ).
+    me->zzif_rest_api~set_log( is_log = ls_log ).
   ENDMETHOD.
 
 
   METHOD zzif_rest_api~set_log.
     DATA:ls_log TYPE zzt_rest_log.
-    ls_log = iv_log.
+    ls_log = is_log.
     TRY.
         MODIFY zzt_rest_log FROM @ls_log.
       CATCH cx_root INTO DATA(lr_root).
@@ -390,4 +400,5 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
 
     me->zzif_rest_api~ms_log = ls_log.
   ENDMETHOD.
+
 ENDCLASS.

@@ -12,6 +12,8 @@
 @Search.searchable: true
 annotate view ZC_ZT_REST_LOG with
 {
+
+
   @UI.facet: [ { id: 'idIdentification',
                  type: #IDENTIFICATION_REFERENCE,
                  label: '日志查看',
@@ -32,8 +34,15 @@ annotate view ZC_ZT_REST_LOG with
                  position        :   30
                }
                ]
-  @UI.lineItem: [ { position: 10 , importance: #MEDIUM } ]
-  @UI.identification: [ {position: 10 } ]
+
+
+
+
+
+  @UI.lineItem: [ { position: 10 , importance: #MEDIUM },
+                  { position: 10 , type: #FOR_ACTION, dataAction: 'rehandling', label: '重处理' }  ]
+  @UI.identification: [ {position: 10 },
+                        { position: 10,type: #FOR_ACTION, dataAction: 'rehandling', label: '重处理' }]
   @UI.selectionField: [ { position: 10}]
   @Search.defaultSearchElement: true
   uuid;
@@ -72,34 +81,41 @@ annotate view ZC_ZT_REST_LOG with
   @UI.identification: [ {position: 100 } ]
   @EndUserText.label:'执行人'
   ernam;
-//  @UI.lineItem: [ { position: 41 } ]
-//  @UI.fieldGroup: [ { position: 10, qualifier: 'TIME_FG',label: '开始日期' } ]
-//  @EndUserText.label:'开始日期'
-//  @UI.selectionField: [ { position: 50 }]
-//  bdate;
-//  @UI.lineItem: [ { position: 42  } ]
-//  @UI.fieldGroup: [ { position: 20, qualifier: 'TIME_FG',label: '开始时间' } ]
-//  @EndUserText.label:'开始时间'
-//  @UI.selectionField: [ { position: 60}]
-//  btime;
+  //  @UI.lineItem: [ { position: 41 } ]
+  //  @UI.fieldGroup: [ { position: 10, qualifier: 'TIME_FG',label: '开始日期' } ]
+  //  @EndUserText.label:'开始日期'
+  //  @UI.selectionField: [ { position: 50 }]
+  //  bdate;
+  //  @UI.lineItem: [ { position: 42  } ]
+  //  @UI.fieldGroup: [ { position: 20, qualifier: 'TIME_FG',label: '开始时间' } ]
+  //  @EndUserText.label:'开始时间'
+  //  @UI.selectionField: [ { position: 60}]
+  //  btime;
   @UI.lineItem: [ { position: 43  } ]
   @UI.fieldGroup: [ { position: 20, qualifier: 'TIME_FG',label: '开始时间' } ]
   @EndUserText.label:'开始时间'
   @UI.selectionField: [ { position: 60}]
   btstmpl;
-//  @UI.lineItem: [ { position: 130  } ]
-//  @UI.fieldGroup: [ { position: 30, qualifier: 'TIME_FG',label: '结束日期' } ]
-//  @EndUserText.label:'结束日期'
-//  rdate;
-//  @UI.lineItem: [ { position: 140 } ]
-//  @UI.fieldGroup: [ { position: 40, qualifier: 'TIME_FG',label: '结束时间' } ]
-//  @EndUserText.label:'结束时间'
-//  rtime;
+  //  @UI.lineItem: [ { position: 130  } ]
+  //  @UI.fieldGroup: [ { position: 30, qualifier: 'TIME_FG',label: '结束日期' } ]
+  //  @EndUserText.label:'结束日期'
+  //  rdate;
+  //  @UI.lineItem: [ { position: 140 } ]
+  //  @UI.fieldGroup: [ { position: 40, qualifier: 'TIME_FG',label: '结束时间' } ]
+  //  @EndUserText.label:'结束时间'
+  //  rtime;
   @UI.lineItem: [ { position: 140 } ]
   @UI.fieldGroup: [ { position: 40, qualifier: 'TIME_FG',label: '结束时间' } ]
   @UI.selectionField: [ { position: 70}]
-  @EndUserText.label:'结束时间' 
+  @EndUserText.label:'结束时间'
   rtstmpl;
+
+  @UI.lineItem: [ { position: 150 } ]
+  @UI.fieldGroup: [ { position: 50, qualifier: 'TIME_FG',label: '重处理时间' } ]
+  @EndUserText.label:'重处理时间'
+  ctstmpl;
+
+
   @UI.hidden: true
   CriticalityLine;
 
