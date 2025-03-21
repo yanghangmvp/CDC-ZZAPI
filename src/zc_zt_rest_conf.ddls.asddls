@@ -14,6 +14,10 @@ define root view entity ZC_ZT_REST_CONF
            Zzopara,
            ZztsysID,
            Zzurlp,
+           Zzrequest,
+           Zzresponse,
+           MimeType,
+
            LocalLastChangedAt,
            @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZZCL_GET_REST_CONF'
   virtual  ZztsysIDUrl : abap.string( 256 ),

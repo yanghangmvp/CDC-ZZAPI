@@ -62,7 +62,7 @@ ENDCLASS.
 
 
 
-CLASS zzcl_comm_tool IMPLEMENTATION.
+CLASS ZZCL_COMM_TOOL IMPLEMENTATION.
 
 
   METHOD conv_uom.
@@ -91,153 +91,6 @@ CLASS zzcl_comm_tool IMPLEMENTATION.
       CATCH cx_root INTO DATA(lr_root).
         CHECK 1 = 1.
     ENDTRY.
-  ENDMETHOD.
-
-
-  METHOD get_dest.
-
-*&---定义场景使用变量
-    DATA: lr_cscn TYPE if_com_scenario_factory=>ty_query-cscn_id_range.
-*&---Find CA by Scenario ID
-    lr_cscn = VALUE #( ( sign = 'I' option = 'EQ' low = 'YY1_API' ) ).
-*&---创建实例
-    DATA(lo_factory) = cl_com_arrangement_factory=>create_instance( ).
-    lo_factory->query_ca(
-            EXPORTING
-              is_query           = VALUE #( cscn_id_range = lr_cscn )
-            IMPORTING
-              et_com_arrangement = DATA(lt_ca) ).
-    IF lt_ca IS INITIAL.
-      EXIT.
-    ENDIF.
-
-*&---take the first one
-    READ TABLE lt_ca INTO DATA(lo_ca) INDEX 1.
-*&---get destination based on Communication Arrangement and the service ID
-    TRY.
-        rv_dest = cl_http_destination_provider=>create_by_comm_arrangement(
-                    comm_scenario  = 'YY1_API'
-                    service_id     = 'YY1_API_REST'
-                    comm_system_id = lo_ca->get_comm_system_id( ) ).
-      CATCH cx_http_dest_provider_error INTO DATA(lx_http_dest_provider_error).
-        EXIT.
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD get_dest_odata4.
-
-*&---定义场景使用变量
-    DATA: lr_cscn TYPE if_com_scenario_factory=>ty_query-cscn_id_range.
-*&---Find CA by Scenario ID
-    lr_cscn = VALUE #( ( sign = 'I' option = 'EQ' low = 'YY1_API' ) ).
-*&---创建实例
-    DATA(lo_factory) = cl_com_arrangement_factory=>create_instance( ).
-    lo_factory->query_ca(
-            EXPORTING
-              is_query           = VALUE #( cscn_id_range = lr_cscn )
-            IMPORTING
-              et_com_arrangement = DATA(lt_ca) ).
-    IF lt_ca IS INITIAL.
-      EXIT.
-    ENDIF.
-
-*&---take the first one
-    READ TABLE lt_ca INTO DATA(lo_ca) INDEX 1.
-*&---get destination based on Communication Arrangement and the service ID
-    TRY.
-        rv_dest = cl_http_destination_provider=>create_by_comm_arrangement(
-                    comm_scenario  = 'YY1_API'
-                    service_id     = 'YY1_ODATAV4_REST'
-                    comm_system_id = lo_ca->get_comm_system_id( ) ).
-      CATCH cx_http_dest_provider_error INTO DATA(lx_http_dest_provider_error).
-        EXIT.
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD iso2timestamp.
-    DATA:lv_datum TYPE datum,
-         lv_uzeit TYPE uzeit,
-         lv_stamp TYPE timestampl,
-         lv_iso   TYPE string.
-
-    lv_iso = iv_iso.
-    TRY.
-        SPLIT lv_iso AT 'T' INTO DATA(lv_iso_d) DATA(lv_iso_t).
-        lv_datum = lv_iso_d+0(4) && lv_iso_d+5(2) && lv_iso_d+8(2).
-        lv_uzeit = lv_iso_t+0(2) && lv_iso_t+3(2) && lv_iso_t+6(2).
-
-        CONVERT DATE lv_datum TIME lv_uzeit  INTO TIME STAMP lv_stamp TIME ZONE 'UTC+8'.
-
-        rv_timestamp = lv_stamp.
-      CATCH cx_root INTO DATA(lr_root).
-        CHECK 1 = 1.
-    ENDTRY.
-
-  ENDMETHOD.
-
-
-  METHOD unix2timestamp.
-    DATA: lv_unix_timestamp TYPE i ,  " 例子：UNIX 时间戳，假设为当前时间的时间戳
-          lv_utc_offset     TYPE i VALUE 0,           " UTC 偏移量，单位为秒
-          lv_utc_date       TYPE d,
-          lv_utc_time       TYPE t,
-          lv_abap_datetime  TYPE sy-uzeit.            " ABAP 的日期时间类型
-
-    lv_unix_timestamp = iv_unix.
-    " 计算日期和时间
-    lv_utc_date = sy-datum + ( lv_unix_timestamp - lv_utc_offset ) / 86400.
-    lv_utc_time = ( lv_unix_timestamp - lv_utc_offset ) MOD 86400.
-
-    " 设置 ABAP 的日期时间
-    lv_abap_datetime = lv_utc_date && lv_utc_time.
-  ENDMETHOD.
-
-  METHOD get_last_execute.
-    DATA lv_tmstmp TYPE zzs_comm_log-last_changed_at.
-    GET TIME STAMP FIELD lv_tmstmp.
-
-    SELECT SINGLE *
-      FROM zzt_rest_append
-     WHERE zznumb   = @iv_numb
-       AND zzappac  = 'DATE'
-       AND zzappkey = 'LAST_EXECUTE'
-      INTO @DATA(ls_append).
-    IF sy-subrc = 0.
-      rv_tmstmp = ls_append-zzappvalue.
-    ELSE.
-      ls_append-zznumb   = iv_numb.
-      ls_append-zzappac  = 'DATE'.
-      ls_append-zzappkey = 'LAST_EXECUTE'.
-    ENDIF.
-
-    ls_append-zzappvalue  = lv_tmstmp.
-
-    MODIFY zzt_rest_append FROM @ls_append.
-
-  ENDMETHOD.
-
-  METHOD get_last_execute2.
-    DATA lv_tmstmp TYPE tzntstmps.
-    GET TIME STAMP FIELD lv_tmstmp.
-
-    SELECT SINGLE *
-      FROM zzt_rest_append
-     WHERE zznumb   = @iv_numb
-       AND zzappac  = 'DATE'
-       AND zzappkey = 'LAST_EXECUTE'
-      INTO @DATA(ls_append).
-    IF sy-subrc = 0.
-      rv_tmstmp = ls_append-zzappvalue.
-    ELSE.
-      ls_append-zznumb   = iv_numb.
-      ls_append-zzappac  = 'DATE'.
-      ls_append-zzappkey = 'LAST_EXECUTE'.
-    ENDIF.
-
-    ls_append-zzappvalue  = lv_tmstmp.
-
-    MODIFY zzt_rest_append FROM @ls_append.
-
   ENDMETHOD.
 
 
@@ -307,4 +160,154 @@ CLASS zzcl_comm_tool IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
+
+  METHOD get_dest.
+
+*&---定义场景使用变量
+    DATA: lr_cscn TYPE if_com_scenario_factory=>ty_query-cscn_id_range.
+*&---Find CA by Scenario ID
+    lr_cscn = VALUE #( ( sign = 'I' option = 'EQ' low = 'YY1_API' ) ).
+*&---创建实例
+    DATA(lo_factory) = cl_com_arrangement_factory=>create_instance( ).
+    lo_factory->query_ca(
+            EXPORTING
+              is_query           = VALUE #( cscn_id_range = lr_cscn )
+            IMPORTING
+              et_com_arrangement = DATA(lt_ca) ).
+    IF lt_ca IS INITIAL.
+      EXIT.
+    ENDIF.
+
+*&---take the first one
+    READ TABLE lt_ca INTO DATA(lo_ca) INDEX 1.
+*&---get destination based on Communication Arrangement and the service ID
+    TRY.
+        rv_dest = cl_http_destination_provider=>create_by_comm_arrangement(
+                    comm_scenario  = 'YY1_API'
+                    service_id     = 'YY1_API_REST'
+                    comm_system_id = lo_ca->get_comm_system_id( ) ).
+      CATCH cx_http_dest_provider_error INTO DATA(lx_http_dest_provider_error).
+        EXIT.
+    ENDTRY.
+  ENDMETHOD.
+
+
+  METHOD get_dest_odata4.
+
+*&---定义场景使用变量
+    DATA: lr_cscn TYPE if_com_scenario_factory=>ty_query-cscn_id_range.
+*&---Find CA by Scenario ID
+    lr_cscn = VALUE #( ( sign = 'I' option = 'EQ' low = 'YY1_API' ) ).
+*&---创建实例
+    DATA(lo_factory) = cl_com_arrangement_factory=>create_instance( ).
+    lo_factory->query_ca(
+            EXPORTING
+              is_query           = VALUE #( cscn_id_range = lr_cscn )
+            IMPORTING
+              et_com_arrangement = DATA(lt_ca) ).
+    IF lt_ca IS INITIAL.
+      EXIT.
+    ENDIF.
+
+*&---take the first one
+    READ TABLE lt_ca INTO DATA(lo_ca) INDEX 1.
+*&---get destination based on Communication Arrangement and the service ID
+    TRY.
+        rv_dest = cl_http_destination_provider=>create_by_comm_arrangement(
+                    comm_scenario  = 'YY1_API'
+                    service_id     = 'YY1_ODATAV4_REST'
+                    comm_system_id = lo_ca->get_comm_system_id( ) ).
+      CATCH cx_http_dest_provider_error INTO DATA(lx_http_dest_provider_error).
+        EXIT.
+    ENDTRY.
+  ENDMETHOD.
+
+
+  METHOD get_last_execute.
+    DATA lv_tmstmp TYPE zzs_comm_log-last_changed_at.
+    GET TIME STAMP FIELD lv_tmstmp.
+
+    SELECT SINGLE *
+      FROM zzt_rest_append
+     WHERE zznumb   = @iv_numb
+       AND zzappac  = 'DATE'
+       AND zzappkey = 'LAST_EXECUTE'
+      INTO @DATA(ls_append).
+    IF sy-subrc = 0.
+      rv_tmstmp = ls_append-zzappvalue.
+    ELSE.
+      ls_append-zznumb   = iv_numb.
+      ls_append-zzappac  = 'DATE'.
+      ls_append-zzappkey = 'LAST_EXECUTE'.
+    ENDIF.
+
+    ls_append-zzappvalue  = lv_tmstmp.
+
+    MODIFY zzt_rest_append FROM @ls_append.
+
+  ENDMETHOD.
+
+
+  METHOD get_last_execute2.
+    DATA lv_tmstmp TYPE tzntstmps.
+    GET TIME STAMP FIELD lv_tmstmp.
+
+    SELECT SINGLE *
+      FROM zzt_rest_append
+     WHERE zznumb   = @iv_numb
+       AND zzappac  = 'DATE'
+       AND zzappkey = 'LAST_EXECUTE'
+      INTO @DATA(ls_append).
+    IF sy-subrc = 0.
+      rv_tmstmp = ls_append-zzappvalue.
+    ELSE.
+      ls_append-zznumb   = iv_numb.
+      ls_append-zzappac  = 'DATE'.
+      ls_append-zzappkey = 'LAST_EXECUTE'.
+    ENDIF.
+
+    ls_append-zzappvalue  = lv_tmstmp.
+
+    MODIFY zzt_rest_append FROM @ls_append.
+
+  ENDMETHOD.
+
+
+  METHOD iso2timestamp.
+    DATA:lv_datum TYPE datum,
+         lv_uzeit TYPE uzeit,
+         lv_stamp TYPE timestampl,
+         lv_iso   TYPE string.
+
+    lv_iso = iv_iso.
+    TRY.
+        SPLIT lv_iso AT 'T' INTO DATA(lv_iso_d) DATA(lv_iso_t).
+        lv_datum = lv_iso_d+0(4) && lv_iso_d+5(2) && lv_iso_d+8(2).
+        lv_uzeit = lv_iso_t+0(2) && lv_iso_t+3(2) && lv_iso_t+6(2).
+
+        CONVERT DATE lv_datum TIME lv_uzeit  INTO TIME STAMP lv_stamp TIME ZONE 'UTC+8'.
+
+        rv_timestamp = lv_stamp.
+      CATCH cx_root INTO DATA(lr_root).
+        CHECK 1 = 1.
+    ENDTRY.
+
+  ENDMETHOD.
+
+
+  METHOD unix2timestamp.
+    DATA: lv_unix_timestamp TYPE i ,  " 例子：UNIX 时间戳，假设为当前时间的时间戳
+          lv_utc_offset     TYPE i VALUE 0,           " UTC 偏移量，单位为秒
+          lv_utc_date       TYPE d,
+          lv_utc_time       TYPE t,
+          lv_abap_datetime  TYPE sy-uzeit.            " ABAP 的日期时间类型
+
+    lv_unix_timestamp = iv_unix.
+    " 计算日期和时间
+    lv_utc_date = sy-datum + ( lv_unix_timestamp - lv_utc_offset ) / 86400.
+    lv_utc_time = ( lv_unix_timestamp - lv_utc_offset ) MOD 86400.
+
+    " 设置 ABAP 的日期时间
+    lv_abap_datetime = lv_utc_date && lv_utc_time.
+  ENDMETHOD.
 ENDCLASS.

@@ -13,6 +13,8 @@ authorization master ( global )
   Zznumb;
 
   field ( readonly )
+  Zzrequest,
+  Zzresponse,
   CreatedAt,
   CreatedBy,
   LastChangedAt,
@@ -31,8 +33,10 @@ authorization master ( global )
   draft action Discard;
   draft action Resume;
   draft determine action Prepare;
+  determination createJson on save { field Zznumb; }
+  action reCreate result [1] $self;
 
-  association _append{ create (features: instance); }
+  association _append { create ( features : instance ); }
 
   mapping for zzt_rest_conf
     {
@@ -43,6 +47,9 @@ authorization master ( global )
       Zzipara            = zzipara;
       Zzopara            = zzopara;
       ZztsysID           = zztsysid;
+      Zzresponse         = zzresponse;
+      Zzrequest          = zzrequest;
+      MimeType           = mimetype;
       Zzurlp             = zzurlp;
       CreatedBy          = created_by;
       CreatedAt          = created_at;

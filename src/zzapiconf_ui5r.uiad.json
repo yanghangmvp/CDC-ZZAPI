@@ -1,0 +1,34 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "API基础配置",
+    "originalLanguage": "zh",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD"
+  },
+  "ui5AppDetails": {
+    "appId": "zzapiconf"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_228F65AA3A0AF61AEC5065865DB1F5A1CFCEF76F_TM",
+    "semanticObject": "zzapiconf",
+    "action": "display",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_228F65AA3A0AF61AEC5065865DB1F5A1CFCEF76F_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "API基础配置",
+        "subtitle": "API基础配置"
+      }
+    }
+  ]
+}

@@ -35,7 +35,7 @@ ENDCLASS.
 
 
 
-CLASS zzcl_rest_api IMPLEMENTATION.
+CLASS ZZCL_REST_API IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -364,9 +364,12 @@ CLASS zzcl_rest_api IMPLEMENTATION.
         "关闭连接
         CALL METHOD lr_client->close.
 
-      CATCH cx_web_http_client_error cx_http_dest_provider_error.
+      CATCH cx_web_http_client_error INTO DATA(err).
         IF 1 = 1 .
         ENDIF.
+        DATA(lv_msg) = err->get_longtext( ).
+      CATCH cx_http_dest_provider_error INTO DATA(err1).
+        lv_msg = err1->get_longtext( ).
     ENDTRY.
   ENDMETHOD.
 
@@ -400,5 +403,4 @@ CLASS zzcl_rest_api IMPLEMENTATION.
 
     me->zzif_rest_api~ms_log = ls_log.
   ENDMETHOD.
-
 ENDCLASS.

@@ -1,0 +1,34 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "第三方系统配置",
+    "originalLanguage": "zh",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD"
+  },
+  "ui5AppDetails": {
+    "appId": "zzapisysid"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_CE9BA2DC0C60A21D5446E8E481EA42A889DC4599_TM",
+    "semanticObject": "zzapisysid",
+    "action": "display",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_CE9BA2DC0C60A21D5446E8E481EA42A889DC4599_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "第三方系统配置",
+        "subtitle": "第三方系统配置"
+      }
+    }
+  ]
+}

@@ -20,8 +20,10 @@ annotate view ZC_ZT_REST_CONF with
                  label: '附加数据',
                  position: 20
                 }]
+
   @UI.lineItem: [ { position: 10 , importance: #MEDIUM } ]
-  @UI.identification: [ { position: 10  } ]
+  @UI.identification: [ {position: 10 },
+                        { position: 10,type: #FOR_ACTION, dataAction: 'reCreate', label: '更新报文' }]
   @UI.selectionField: [ { position: 10}]
   @Search.defaultSearchElement: true
   @Consumption.valueHelpDefinition: [{  entity: {name: 'ZR_VH_REST_NUM' , element: 'zznumb'  } }]
@@ -86,6 +88,14 @@ annotate view ZC_ZT_REST_CONF with
     position: 80
   } ]
   Zzurlp;
+  @UI.lineItem: [ { position: 90 ,importance: #MEDIUM } ]
+  @UI.identification: [ { position: 90 } ]
+  @EndUserText.label            : '请求报文'
+  Zzrequest;
+  @UI.lineItem: [ { position: 100 , importance: #MEDIUM} ]
+  @UI.identification: [ { position: 100 } ]
+  @EndUserText.label            : '返回报文'
+  Zzresponse;
 
   @UI.hidden: true
   ZztsysIDUrl;

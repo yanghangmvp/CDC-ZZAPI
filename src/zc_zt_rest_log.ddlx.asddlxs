@@ -39,10 +39,10 @@ annotate view ZC_ZT_REST_LOG with
 
 
 
-  @UI.lineItem: [ { position: 10 , importance: #MEDIUM },
-                  { position: 10 , type: #FOR_ACTION, dataAction: 'rehandling', label: '重处理' }  ]
-  @UI.identification: [ {position: 10 },
-                        { position: 10,type: #FOR_ACTION, dataAction: 'rehandling', label: '重处理' }]
+//  @UI.lineItem: [ { position: 10 , importance: #MEDIUM },
+//                  { position: 10 , type: #FOR_ACTION, dataAction: 'rehandling', label: '重处理' }  ]
+//  @UI.identification: [ {position: 10 },
+//                        { position: 10,type: #FOR_ACTION, dataAction: 'rehandling', label: '重处理' }]
   @UI.selectionField: [ { position: 10}]
   @Search.defaultSearchElement: true
   uuid;
