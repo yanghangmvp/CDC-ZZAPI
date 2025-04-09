@@ -1,3 +1,4 @@
+
 CLASS lhc_conf DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
 

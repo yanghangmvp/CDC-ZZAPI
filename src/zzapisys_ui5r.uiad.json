@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "接口配置",
+    "description": "第三方系统配置",
     "originalLanguage": "zh",
     "abapLanguageVersion": "cloudDevelopment"
   },
@@ -10,11 +10,11 @@
     "catalogId": "SAP_TC_UI5_REPO_UIAD"
   },
   "ui5AppDetails": {
-    "appId": "zzapiconf"
+    "appId": "zzapisys"
   },
   "navigation": {
-    "targetMappingId": "UI5R_228F65AA3A0AF61AEC5065865DB1F5A1CFCEF76F_TM",
-    "semanticObject": "zzapiconf",
+    "targetMappingId": "UI5R_E5A9D1D2756937C9911C21C2AEDA6E0488C8BD06_TM",
+    "semanticObject": "zzapisys",
     "action": "display",
     "desktop": true,
     "tablet": true,
@@ -22,12 +22,12 @@
   },
   "tiles": [
     {
-      "id": "UI5R_228F65AA3A0AF61AEC5065865DB1F5A1CFCEF76F_AL",
+      "id": "UI5R_E5A9D1D2756937C9911C21C2AEDA6E0488C8BD06_AL",
       "tileType": "static",
       "isDefault": true,
       "standard": {
-        "title": "接口配置",
-        "subtitle": "接口配置"
+        "title": "第三方系统配置",
+        "subtitle": "第三方系统配置"
       }
     }
   ]

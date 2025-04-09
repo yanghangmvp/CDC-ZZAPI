@@ -282,7 +282,7 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
         lo_request->set_text( i_text = lv_json ).
         "设置验证方式
         CASE me->zzif_rest_api~ms_conf-zzauty.
-          WHEN 'p'.
+          WHEN 'P'.
             ""密码认证
             lo_request->set_authorization_basic(
                             i_username = CONV string( me->zzif_rest_api~ms_conf-zzuser )
@@ -364,12 +364,9 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
         "关闭连接
         CALL METHOD lr_client->close.
 
-      CATCH cx_web_http_client_error INTO DATA(err).
+      CATCH cx_web_http_client_error cx_http_dest_provider_error.
         IF 1 = 1 .
         ENDIF.
-        DATA(lv_msg) = err->get_longtext( ).
-      CATCH cx_http_dest_provider_error INTO DATA(err1).
-        lv_msg = err1->get_longtext( ).
     ENDTRY.
   ENDMETHOD.
 
@@ -382,13 +379,36 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
   METHOD zzif_rest_api~restrans.
     DATA:ls_log TYPE zzt_rest_log.
     DATA:lv_json TYPE string.
-    lv_json =  iv_json.
-    ls_log = me->zzif_rest_api~ms_log.
 
-    ls_log-rdate    = sy-datum.
-    ls_log-rtime    = sy-uzeit.
-    GET TIME STAMP FIELD ls_log-rtstmpl.
-    me->zzif_rest_api~set_log( is_log = ls_log ).
+    TYPES:BEGIN OF ty_resp,
+            msgty TYPE string,
+            msgtx TYPE string,
+          END OF ty_resp.
+    DATA:ls_resp TYPE ty_resp.
+    DATA:lv_msgty TYPE msgty.
+    TRY .
+        "解析UUID和接口编号
+        /ui2/cl_json=>deserialize( EXPORTING json        = iv_json
+                                             pretty_name = /ui2/cl_json=>pretty_mode-camel_case
+                                   CHANGING  data        = ls_resp ).
+      CATCH cx_root INTO DATA(lr_root).
+        IF 1 = 1.
+        ENDIF.
+    ENDTRY.
+
+    IF ls_resp-msgty  = 'S'.
+      lv_msgty = 'S'.
+    ELSE.
+      lv_msgty = 'E'.
+    ENDIF.
+
+
+    cv_msgty = cs_log-msgty = lv_msgty.
+    cv_msgtx = ls_resp-msgtx.
+    cs_log-rdate    = sy-datum.
+    cs_log-rtime    = sy-uzeit.
+    GET TIME STAMP FIELD cs_log-rtstmpl.
+    me->zzif_rest_api~set_log( is_log = cs_log ).
   ENDMETHOD.
 
 

@@ -14,6 +14,12 @@ define root view entity ZR_ZT_REST_CONF
       @ObjectModel.foreignKey.association: '_sysid'
       zztsysid              as ZztsysID,
       zzurlp                as Zzurlp,
+      
+      case zzisst when 'X' then 3      //0: unknown  1: red colour 2: yellow colour  3: green colour
+                  when ''  then 2
+                  else 0
+                  end as zzisstCriticality,
+
       @Semantics.largeObject:
       { mimeType: 'MimeType',
         contentDispositionPreference: #INLINE }

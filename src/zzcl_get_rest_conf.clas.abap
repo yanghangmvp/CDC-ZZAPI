@@ -20,7 +20,7 @@ CLASS ZZCL_GET_REST_CONF IMPLEMENTATION.
 
     LOOP AT lt_original_data ASSIGNING FIELD-SYMBOL(<fs_original_data>).
       IF <fs_original_data>-zztsysid IS NOT INITIAL.
-        DATA(lv_url) = |#zzapisysid-display&/sysid('{ <fs_original_data>-zztsysid }')|.
+        DATA(lv_url) = |#zzapisys-display&/sysid('{ <fs_original_data>-zztsysid }')|.
         <fs_original_data>-zztsysidurl = lv_url.
       ENDIF.
     ENDLOOP.

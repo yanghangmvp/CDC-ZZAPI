@@ -26,4 +26,5 @@ define view ZR_VT_REST_CONF
       _sysid.zzctid,
       _sysid.zzctsecret,
       _sysid.zzscope
+ 
 }

@@ -25,41 +25,7 @@ ENDCLASS.
 
 
 
-CLASS zzcl_rest_api_hly IMPLEMENTATION.
-
-  METHOD zzif_rest_api~restrans.
-    TYPES:BEGIN OF ty_resp,
-            message   TYPE string,
-            errorcode TYPE string,
-            key       TYPE string,
-            oid       TYPE string,
-          END OF ty_resp.
-    DATA:ls_resp TYPE ty_resp.
-    DATA:lv_msgty TYPE msgty.
-    TRY .
-        "解析UUID和接口编号
-        /ui2/cl_json=>deserialize( EXPORTING json        = iv_json
-                                             pretty_name = /ui2/cl_json=>pretty_mode-camel_case
-                                   CHANGING  data        = ls_resp ).
-      CATCH cx_root INTO DATA(lr_root).
-        IF 1 = 1.
-        ENDIF.
-    ENDTRY.
-
-    IF ls_resp-errorcode  = '0000'.
-      lv_msgty = 'S'.
-    ELSE.
-      lv_msgty = 'E'.
-    ENDIF.
-
-    cv_msgty = cs_log-msgty = lv_msgty.
-    cv_msgtx = ls_resp-message.
-    cs_log-rdate    = sy-datum.
-    cs_log-rtime    = sy-uzeit.
-    GET TIME STAMP FIELD cs_log-rtstmpl.
-    me->zzif_rest_api~set_log( is_log = cs_log ).
-
-  ENDMETHOD.
+CLASS ZZCL_REST_API_HLY IMPLEMENTATION.
 
 
   METHOD hlyout.
@@ -157,6 +123,7 @@ CLASS zzcl_rest_api_hly IMPLEMENTATION.
     ENDTRY.
   ENDMETHOD.
 
+
   METHOD token.
     TYPES:
       BEGIN OF ty_token,
@@ -199,6 +166,41 @@ CLASS zzcl_rest_api_hly IMPLEMENTATION.
         IF 1 = 1 .
         ENDIF.
     ENDTRY.
+
+  ENDMETHOD.
+
+
+  METHOD zzif_rest_api~restrans.
+    TYPES:BEGIN OF ty_resp,
+            message   TYPE string,
+            errorcode TYPE string,
+            key       TYPE string,
+            oid       TYPE string,
+          END OF ty_resp.
+    DATA:ls_resp TYPE ty_resp.
+    DATA:lv_msgty TYPE msgty.
+    TRY .
+        "解析UUID和接口编号
+        /ui2/cl_json=>deserialize( EXPORTING json        = iv_json
+                                             pretty_name = /ui2/cl_json=>pretty_mode-camel_case
+                                   CHANGING  data        = ls_resp ).
+      CATCH cx_root INTO DATA(lr_root).
+        IF 1 = 1.
+        ENDIF.
+    ENDTRY.
+
+    IF ls_resp-errorcode  = '0000'.
+      lv_msgty = 'S'.
+    ELSE.
+      lv_msgty = 'E'.
+    ENDIF.
+
+    cv_msgty = cs_log-msgty = lv_msgty.
+    cv_msgtx = ls_resp-message.
+    cs_log-rdate    = sy-datum.
+    cs_log-rtime    = sy-uzeit.
+    GET TIME STAMP FIELD cs_log-rtstmpl.
+    me->zzif_rest_api~set_log( is_log = cs_log ).
 
   ENDMETHOD.
 ENDCLASS.

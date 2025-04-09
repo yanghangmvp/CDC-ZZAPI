@@ -2,100 +2,107 @@
 @UI: {
   headerInfo: {
     typeName: '接口数据维护',
-    typeNamePlural: '接口数据维护'
-  }
-}
+    typeNamePlural: '接口数据维护',
+    title: { type: #STANDARD, value: 'Zznumb' },
+    description: { value: 'Zzname' }
+   }
+ }
 @Search.searchable: true
 annotate view ZC_ZT_REST_CONF with
 {
-  @UI.facet: [ {
-    id: 'idIdentification',
-    type: #IDENTIFICATION_REFERENCE,
-    label: '接口数据维护',
-    position: 10
-  } ,
-   { id: 'Append',
+  @UI.facet: [
+             {
+               id: 'StatusData',
+               purpose: #HEADER,
+               type: #DATAPOINT_REFERENCE,
+               position: 10,
+               targetQualifier: 'StatusData'
+             },
+              {  id: 'idIdentification',
+                 type: #IDENTIFICATION_REFERENCE,
+                 label: '基本信息',
+                 position: 10
+                } ,
+               {
+                  label: '配置信息',
+                  id: 'ConfigInfo',
+                  type: #COLLECTION,
+                  position: 20
+               },
+                {  id: 'Inbound',
+                   purpose: #STANDARD,
+                   type: #FIELDGROUP_REFERENCE,
+                   parentId: 'ConfigInfo',
+                   label: '传入接口信息',
+                   position: 12,
+                   targetQualifier: 'InboundGroup'
+                },
+                {  id: 'Outbound',
+                   purpose: #STANDARD,
+                   type: #FIELDGROUP_REFERENCE,
+                   parentId: 'ConfigInfo',
+                   label: '传出接口信息',
+                   position: 13,
+                   targetQualifier: 'OutboundGroup'
+                },
+
+               { id: 'Append',
                  type:#LINEITEM_REFERENCE,
                  targetElement: '_append',
                  label: '附加数据',
-                 position: 20
+                 position: 30
                 }]
 
   @UI.lineItem: [ { position: 10 , importance: #MEDIUM } ]
-  @UI.identification: [ {position: 10 },
+  @UI.identification: [ { position: 10} ,
                         { position: 10,type: #FOR_ACTION, dataAction: 'reCreate', label: '更新报文' }]
   @UI.selectionField: [ { position: 10}]
   @Search.defaultSearchElement: true
   @Consumption.valueHelpDefinition: [{  entity: {name: 'ZR_VH_REST_NUM' , element: 'zznumb'  } }]
+  @UI.fieldGroup: [{ qualifier: 'BasisGroup', position: 10 }]
   Zznumb;
 
-  @UI.lineItem: [ {
-    position: 20 ,
-    importance: #MEDIUM
-  } ]
-  @UI.identification: [ {
-    position: 20
-  } ]
+  @UI.lineItem: [ { position: 20 , importance: #MEDIUM } ]
+  @UI.identification: [ {  position: 20} ]
   Zzname;
 
-  @UI.lineItem: [ {
-    position: 30 ,
-    importance: #MEDIUM
-  } ]
-  @UI.identification: [ {
-    position: 30
-  } ]
+  @UI.lineItem: [ { position: 30 , criticality:'zzisstCriticality' }]
+  @UI.identification: [ {  position: 30} ]
+  @UI.dataPoint: { qualifier: 'StatusData', title: '启用状态',criticality:'zzisstCriticality' }
+  @UI.fieldGroup: [{ qualifier: 'BasisGroup', position: 30 }]
   Zzisst;
 
-  @UI.lineItem: [ {
-    position: 40 ,
-    importance: #MEDIUM
-  } ]
-  @UI.identification: [ {
-    position: 40
-  } ]
+  @UI.lineItem: [ { position: 40 , importance: #MEDIUM } ]
+  @UI.fieldGroup: [{ qualifier: 'InboundGroup', position: 10 }]
   Zzfname;
 
-  @UI.lineItem: [ {
-    position: 50 ,
-    importance: #MEDIUM
-  } ]
-  @UI.identification: [ {
-    position: 50
-  } ]
+  @UI.lineItem: [ { position: 50  } ]
+  @UI.fieldGroup: [{ qualifier: 'InboundGroup', position: 20 }]
   Zzipara;
 
-  @UI.lineItem: [ {
-    position: 60 ,
-    importance: #MEDIUM
-  } ]
-  @UI.identification: [ {
-    position: 60
-  } ]
+  @UI.lineItem: [ {  position: 60 } ]
+  @UI.fieldGroup: [{ qualifier: 'InboundGroup', position: 30 }]
   Zzopara;
-
-  @UI.lineItem: [ { position: 70 ,  importance: #HIGH, type: #WITH_URL, url: 'ZztsysIDUrl'}]
-  @UI.identification: [ { position: 70 , type: #WITH_URL, url: 'ZztsysIDUrl' } ]
-  @UI  : {   dataPoint: { title: 'Generation Log', targetValueElement: 'ZztsysID'}}
-  @Consumption.valueHelpDefinition: [{  entity: {name: 'ZR_VH_REST_SYSID' , element: 'zztsysid'  } }]
-  ZztsysID;
-
-  @UI.lineItem: [ {
-    position: 80 ,
-    importance: #MEDIUM
-  } ]
-  @UI.identification: [ {
-    position: 80
-  } ]
-  Zzurlp;
   @UI.lineItem: [ { position: 90 ,importance: #MEDIUM } ]
-  @UI.identification: [ { position: 90 } ]
+  @UI.fieldGroup: [{ qualifier: 'InboundGroup', position: 40 }]
   @EndUserText.label            : '请求报文'
   Zzrequest;
   @UI.lineItem: [ { position: 100 , importance: #MEDIUM} ]
-  @UI.identification: [ { position: 100 } ]
+  @UI.fieldGroup: [{ qualifier: 'InboundGroup', position: 50 }]
   @EndUserText.label            : '返回报文'
   Zzresponse;
+
+
+
+  @UI.lineItem: [ { position: 70 , type: #WITH_URL, url: 'ZztsysIDUrl'}]
+  @UI.fieldGroup: [{ qualifier: 'OutboundGroup', position: 10,type: #WITH_URL, url: 'ZztsysIDUrl' }]
+  @Consumption.valueHelpDefinition: [{  entity: {name: 'ZR_VH_REST_SYSID' , element: 'zztsysid'  } }]
+  ZztsysID;
+
+  @UI.lineItem: [ { position: 80 } ]
+  @UI.fieldGroup: [{ qualifier: 'OutboundGroup', position: 20 }]
+  Zzurlp;
+
 
   @UI.hidden: true
   ZztsysIDUrl;

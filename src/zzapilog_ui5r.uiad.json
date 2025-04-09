@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "API接口日志",
+    "description": "接口日志",
     "originalLanguage": "zh",
     "abapLanguageVersion": "cloudDevelopment"
   },
@@ -26,8 +26,8 @@
       "tileType": "static",
       "isDefault": true,
       "standard": {
-        "title": "API接口日志",
-        "subtitle": "API接口日志"
+        "title": "接口日志",
+        "subtitle": "接口日志"
       }
     }
   ]
