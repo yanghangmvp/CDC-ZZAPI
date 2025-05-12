@@ -46,14 +46,14 @@ annotate view ZC_ZT_REST_SYSID with
 
   @UI.lineItem: [ { position: 50 , importance: #MEDIUM } ]
   @UI.identification: [ { position: 50  } ]
-  @Consumption.valueHelpDefinition: [{ entity: {name: 'ZR_VH_REST_AUTH' , element: 'value' }}]
+  @Consumption.valueHelpDefinition: [{ entity: {name: 'ZR_VH_REST_AUTH' , element: 'value' }, useForValidation: true}]
   Zzauty;
 
   @UI.fieldGroup: [ { position: 10, qualifier: 'BASIS_FG',label: '用户名' } ]
   Zzuser;
 
   @UI.fieldGroup: [ { position: 210, qualifier: 'BASIS_FG',label: '密码' } ]
-  @UI.masked
+  @UI.masked:true
   Zzpwd;
 
   @UI.fieldGroup: [ { position: 10, qualifier: 'OAUTH_FG'} ]

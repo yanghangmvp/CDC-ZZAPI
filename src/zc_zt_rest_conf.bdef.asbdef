@@ -1,5 +1,6 @@
 projection;
 strict;
+use side effects;
 use draft;
 define behavior for ZC_ZT_REST_CONF
 use etag
@@ -14,7 +15,6 @@ use etag
   use action Discard;
   use action Resume;
   use action Prepare;
-  use action reCreate;
 
   use association _append { create; }
 }

@@ -125,8 +125,6 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
 
     "ls_log-zzrequest = i_json.
     ls_log-ernam = sy-uname.
-    ls_log-bdate = sy-datum.
-    ls_log-btime = sy-uzeit.
     GET TIME STAMP FIELD ls_log-btstmpl.
 
     me->zzif_rest_api~set_log( is_log = ls_log ).
@@ -151,11 +149,33 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
                                                  pretty_name = /ui2/cl_json=>pretty_mode-camel_case
                                        CHANGING  data        = <fs_req> ).
 
-            CALL FUNCTION gs_fconf-zzfname
-              EXPORTING
-                i_req  = <fs_req>
-              IMPORTING
-                o_resp = <fs_resp>.
+***********************************************************************
+" Modified by 47826, add a check to handle class and function module
+*            CALL FUNCTION gs_fconf-zzfname
+*              EXPORTING
+*                i_req  = <fs_req>
+*              IMPORTING
+*                o_resp = <fs_resp>.
+
+            IF gs_fconf-zzfname CP '*ZFM*'.
+              CALL FUNCTION gs_fconf-zzfname
+                EXPORTING
+                  i_req  = <fs_req>
+                IMPORTING
+                  o_resp = <fs_resp>.
+
+            ELSEIF gs_fconf-zzfname CP '*ZCL*'.
+              DATA: lo_object TYPE REF TO object.
+              CREATE OBJECT lo_object TYPE (gs_fconf-zzfname).
+              CALL METHOD lo_object->('INBOUND')
+                EXPORTING
+                  i_req  = <fs_req>
+                IMPORTING
+                  o_resp = <fs_resp>.
+
+            ENDIF.
+***********************************************************************
+
           ELSE.
             g_ecode = 6."请在SAP中配置接口编号
           ENDIF.
@@ -208,8 +228,6 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
 
 *&--添加响应日志
     ls_log-zzname = gs_fconf-zzname.
-    ls_log-rdate = sy-datum.
-    ls_log-rtime = sy-uzeit.
     GET TIME STAMP FIELD ls_log-rtstmpl.
     ls_log-zzresponse =  /ui2/cl_json=>string_to_raw( EXPORTING iv_string = o_json ).
 
@@ -265,8 +283,6 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
     ls_log-zzrequest = /ui2/cl_json=>string_to_raw( EXPORTING iv_string   = lv_json ).
     ls_log-mimetype = 'application/json'.
     ls_log-ernam   = sy-uname.
-    ls_log-bdate   = sy-datum.
-    ls_log-btime   = sy-uzeit.
     GET TIME STAMP FIELD ls_log-btstmpl.
     me->zzif_rest_api~set_log( is_log = ls_log ).
 
@@ -405,8 +421,6 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
 
     cv_msgty = cs_log-msgty = lv_msgty.
     cv_msgtx = ls_resp-msgtx.
-    cs_log-rdate    = sy-datum.
-    cs_log-rtime    = sy-uzeit.
     GET TIME STAMP FIELD cs_log-rtstmpl.
     me->zzif_rest_api~set_log( is_log = cs_log ).
   ENDMETHOD.

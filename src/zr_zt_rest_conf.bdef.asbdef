@@ -28,13 +28,25 @@ authorization master ( global )
   update;
   delete;
 
+
+  side effects
+  {
+    field Zzipara affects field Zzrequest;
+    field Zzopara affects field zzresponse; }
+
   draft action Edit;
   draft action Activate optimized;
   draft action Discard;
   draft action Resume;
-  draft determine action Prepare;
-  determination createJson on save { field Zznumb; }
-  action reCreate result [1] $self;
+
+  determination createJson on modify { field Zzipara, Zzopara; }
+  validation validateStruct on save { create; update; field Zzfname,Zzipara,Zzopara; }
+  draft determine action Prepare
+  {
+    validation validateStruct; }
+
+
+
 
   association _append { create ( features : instance ); }
 
