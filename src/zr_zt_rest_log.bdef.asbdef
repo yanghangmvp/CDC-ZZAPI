@@ -1,5 +1,5 @@
 managed implementation in class zbp_r_zt_rest_log unique;
-strict ( 2 );
+strict;
 
 define behavior for ZR_ZT_REST_LOG alias log
 persistent table zzt_rest_log
@@ -14,4 +14,5 @@ authorization master ( instance )
 
   action ( features : instance ) rehandling result selective [1..*] $self;
 
+  static action ClearLog parameter ZR_REST_CLEAR_POP ;
 }

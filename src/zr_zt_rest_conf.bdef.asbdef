@@ -40,12 +40,12 @@ authorization master ( global )
   draft action Resume;
 
   determination createJson on modify { field Zzipara, Zzopara; }
-  validation validateStruct on save { create; update; field Zzfname,Zzipara,Zzopara; }
+  validation validateStruct on save { create; update; field Zzfname, Zzipara, Zzopara; }
   draft determine action Prepare
   {
     validation validateStruct; }
 
-
+  action Refresh result [1] $self;
 
 
   association _append { create ( features : instance ); }

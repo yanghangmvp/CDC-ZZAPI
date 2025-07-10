@@ -15,6 +15,7 @@ use etag
   use action Discard;
   use action Resume;
   use action Prepare;
+  use action Refresh;
 
   use association _append { create; }
 }

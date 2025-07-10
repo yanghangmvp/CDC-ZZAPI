@@ -9,6 +9,9 @@ CLASS lhc_zr_zt_rest_log DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS rehandling FOR MODIFY
       IMPORTING keys FOR ACTION log~rehandling REQUEST is_requested_fields RESULT  result.
+    METHODS clearlog FOR MODIFY
+      IMPORTING keys FOR ACTION log~clearlog.
+
 ENDCLASS.
 
 CLASS lhc_zr_zt_rest_log IMPLEMENTATION.
@@ -157,4 +160,24 @@ CLASS lhc_zr_zt_rest_log IMPLEMENTATION.
                                            ) ).
 
   ENDMETHOD.
+
+  METHOD clearlog.
+    DATA:lv_tstmpl TYPE timestampl.
+
+    READ TABLE keys INTO DATA(key) INDEX 1.
+
+    lv_tstmpl = xco_cp=>sy->moment( )->subtract( iv_day = CONV i( key-%param-zzdate )
+                                 )->as( xco_cp_time=>format->abap
+                                 )->value.
+
+    DELETE FROM zzt_rest_log WHERE btstmpl <= @lv_tstmpl.
+
+    APPEND VALUE #( %msg      = new_message_with_text(
+                                 severity  = if_abap_behv_message=>severity-success
+                                 text      = 'Successfully delete!'
+                   )
+               )  TO  reported-log.
+  ENDMETHOD.
+
+
 ENDCLASS.

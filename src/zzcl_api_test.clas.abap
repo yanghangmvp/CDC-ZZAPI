@@ -5,6 +5,11 @@ CLASS zzcl_api_test DEFINITION
 
   PUBLIC SECTION.
     INTERFACES if_oo_adt_classrun .
+    METHODS inbound
+      IMPORTING
+        i_req  TYPE zzs_api_test001 OPTIONAL
+      EXPORTING
+        o_resp TYPE zzs_rest_out.
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -52,5 +57,11 @@ CLASS ZZCL_API_TEST IMPLEMENTATION.
     ENDIF.
 
 
+  ENDMETHOD.
+
+
+  METHOD inbound.
+    o_resp-msgty = 'S'.
+    o_resp-msgtx = 'Success'.
   ENDMETHOD.
 ENDCLASS.

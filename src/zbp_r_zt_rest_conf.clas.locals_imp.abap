@@ -13,6 +13,8 @@ CLASS lhc_conf DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS validatestruct FOR VALIDATE ON SAVE
       IMPORTING keys FOR conf~validatestruct.
+    METHODS refresh FOR MODIFY
+      IMPORTING keys FOR ACTION conf~refresh RESULT result.
 
     METHODS set_json
       IMPORTING
@@ -41,7 +43,7 @@ CLASS lhc_conf IMPLEMENTATION.
     LOOP AT lr_tool->mt_dd03 INTO DATA(ls_data).
 
       READ TABLE lt_dd03 INTO DATA(ls_dd03) WITH KEY parent = ls_data-rollname deep = ls_data-deep + 1.
-
+      CHECK sy-subrc = 0.
       FIELD-SYMBOLS:<fs_item>  TYPE any.
       "参数结构中的表类型
       CREATE DATA lo_item TYPE (ls_dd03-tabname).
@@ -198,6 +200,34 @@ CLASS lhc_conf IMPLEMENTATION.
     ENDLOOP.
 
 
+  ENDMETHOD.
+
+  METHOD refresh.
+    DATA:lt_keys TYPE TABLE FOR DETERMINATION zr_zt_rest_conf\\conf~createjson.
+    MOVE-CORRESPONDING keys TO lt_keys.
+    me->createjson(
+      EXPORTING
+        keys     =  lt_keys
+    ).
+
+    READ ENTITIES OF zr_zt_rest_conf IN LOCAL MODE
+  ENTITY conf
+     ALL FIELDS WITH CORRESPONDING #( keys )
+  RESULT DATA(lt_results).
+
+    LOOP AT lt_results INTO DATA(ls_results).
+      APPEND VALUE #( %tky               = ls_results-%tky
+                      %msg              = new_message_with_text(
+                                               text = 'Refresh successful!'
+                                               severity = if_abap_behv_message=>severity-success
+                                               )
+                   ) TO reported-conf.
+
+    ENDLOOP.
+
+    result = VALUE #( FOR ls_travel IN lt_results ( %tky = ls_travel-%tky
+                                                    %param    = ls_travel
+                                              )  ).
   ENDMETHOD.
 
 ENDCLASS.
