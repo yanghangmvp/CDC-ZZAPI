@@ -4,8 +4,6 @@
   <asx:values>
    <DDLS>
     <DDLNAME>ZR_ZT_REST_CONF</DDLNAME>
-    <DDLANGUAGE>E</DDLANGUAGE>
-    <DDTEXT>##GENERATED ZZT_REST_CONF</DDTEXT>
     <SOURCE_TYPE>W</SOURCE_TYPE>
    </DDLS>
   </asx:values>

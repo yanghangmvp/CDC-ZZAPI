@@ -150,12 +150,6 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
                                        CHANGING  data        = <fs_req> ).
 
 ***********************************************************************
-" Modified by 47826, add a check to handle class and function module
-*            CALL FUNCTION gs_fconf-zzfname
-*              EXPORTING
-*                i_req  = <fs_req>
-*              IMPORTING
-*                o_resp = <fs_resp>.
 
             IF gs_fconf-zzfname CP '*ZFM*'.
               CALL FUNCTION gs_fconf-zzfname
@@ -397,8 +391,10 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
     DATA:lv_json TYPE string.
 
     TYPES:BEGIN OF ty_resp,
-            msgty TYPE string,
-            msgtx TYPE string,
+            msgty      TYPE string,
+            msgtx      TYPE string,
+            resultcode TYPE string,
+            message    TYPE string,
           END OF ty_resp.
     DATA:ls_resp TYPE ty_resp.
     DATA:lv_msgty TYPE msgty.
@@ -412,12 +408,19 @@ CLASS ZZCL_REST_API IMPLEMENTATION.
         ENDIF.
     ENDTRY.
 
-    IF ls_resp-msgty  = 'S'.
+    IF ls_resp-msgty  = 'S' .
       lv_msgty = 'S'.
     ELSE.
       lv_msgty = 'E'.
     ENDIF.
 
+    IF cs_log-zztsysid = 'DMS'.
+      IF ls_resp-resultcode = '200'.
+        lv_msgty = 'S'.
+      ELSE.
+        ls_resp-msgtx = ls_resp-message.
+      ENDIF.
+    ENDIF.
 
     cv_msgty = cs_log-msgty = lv_msgty.
     cv_msgtx = ls_resp-msgtx.

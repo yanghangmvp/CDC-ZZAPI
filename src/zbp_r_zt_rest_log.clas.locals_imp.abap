@@ -75,11 +75,23 @@ CLASS lhc_zr_zt_rest_log IMPLEMENTATION.
                                                pretty_name = /ui2/cl_json=>pretty_mode-camel_case
                                      CHANGING  data        = <fs_req> ).
 
-          CALL FUNCTION ls_conf-zzfname
-            EXPORTING
-              i_req  = <fs_req>
-            IMPORTING
-              o_resp = <fs_resp>.
+          IF ls_conf-zzfname CP '*ZFM*'.
+            CALL FUNCTION ls_conf-zzfname
+              EXPORTING
+                i_req  = <fs_req>
+              IMPORTING
+                o_resp = <fs_resp>.
+
+          ELSEIF ls_conf-zzfname CP '*ZCL*'.
+            DATA: lo_object TYPE REF TO object.
+            CREATE OBJECT lo_object TYPE (ls_conf-zzfname).
+            CALL METHOD lo_object->('INBOUND')
+              EXPORTING
+                i_req  = <fs_req>
+              IMPORTING
+                o_resp = <fs_resp>.
+
+          ENDIF.
 
           "返回单据记录
           ASSIGN COMPONENT 'SAPNUM' OF STRUCTURE <fs_resp> TO <fs_value>.

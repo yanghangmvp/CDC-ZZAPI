@@ -14,6 +14,12 @@ CLASS zzcl_comm_tool DEFINITION
       IMPORTING
         iv_iso              TYPE string
       RETURNING
+        VALUE(rv_timestamp) TYPE timestamp.
+
+    CLASS-METHODS iso2timestampl
+      IMPORTING
+        iv_iso              TYPE string
+      RETURNING
         VALUE(rv_timestamp) TYPE timestampl.
 
     CLASS-METHODS date2iso
@@ -54,6 +60,11 @@ CLASS zzcl_comm_tool DEFINITION
       IMPORTING is_reported  TYPE any
                 iv_component TYPE string
       RETURNING VALUE(msg)   TYPE bapi_msg.
+
+    CLASS-METHODS http
+      IMPORTING
+                is_req         TYPE zzs_http_req
+      RETURNING VALUE(es_resp) TYPE zzs_http_resp.
 
 
   PROTECTED SECTION.
@@ -276,6 +287,28 @@ CLASS ZZCL_COMM_TOOL IMPLEMENTATION.
   METHOD iso2timestamp.
     DATA:lv_datum TYPE datum,
          lv_uzeit TYPE uzeit,
+         lv_stamp TYPE timestamp,
+         lv_iso   TYPE string.
+
+    lv_iso = iv_iso.
+    TRY.
+        SPLIT lv_iso AT 'T' INTO DATA(lv_iso_d) DATA(lv_iso_t).
+        lv_datum = lv_iso_d+0(4) && lv_iso_d+5(2) && lv_iso_d+8(2).
+        lv_uzeit = lv_iso_t+0(2) && lv_iso_t+3(2) && lv_iso_t+6(2).
+
+        CONVERT DATE lv_datum TIME lv_uzeit  INTO TIME STAMP lv_stamp TIME ZONE 'UTC+8'.
+
+        rv_timestamp = lv_stamp.
+      CATCH cx_root INTO DATA(lr_root).
+        CHECK 1 = 1.
+    ENDTRY.
+
+  ENDMETHOD.
+
+
+  METHOD iso2timestampl.
+    DATA:lv_datum TYPE datum,
+         lv_uzeit TYPE uzeit,
          lv_stamp TYPE timestampl,
          lv_iso   TYPE string.
 
@@ -309,5 +342,71 @@ CLASS ZZCL_COMM_TOOL IMPLEMENTATION.
 
     " 设置 ABAP 的日期时间
     lv_abap_datetime = lv_utc_date && lv_utc_time.
+  ENDMETHOD.
+
+
+  METHOD http.
+    DATA lo_dest TYPE REF TO  if_http_destination.
+    DATA lv_method TYPE if_web_http_client=>method.
+
+    CASE is_req-method.
+      WHEN 'GET'.
+        lv_method = if_web_http_client=>get.
+      WHEN 'POST'.
+        lv_method = if_web_http_client=>post.
+      WHEN 'PATCH'.
+        lv_method = if_web_http_client=>patch.
+      WHEN 'DELETE'.
+        lv_method = if_web_http_client=>delete.
+      WHEN 'PUT'.
+        lv_method = if_web_http_client=>put.
+      WHEN OTHERS.
+        lv_method = if_web_http_client=>post.
+    ENDCASE.
+
+    CASE is_req-version.
+      WHEN 'ODATAV2'.
+        lo_dest = zzcl_comm_tool=>get_dest( ).
+      WHEN 'ODATAV4'.
+        lo_dest = zzcl_comm_tool=>get_dest_odata4( ).
+    ENDCASE.
+    TRY.
+        DATA(lo_http_client) = cl_web_http_client_manager=>create_by_http_destination( lo_dest ).
+        DATA(lo_request) = lo_http_client->get_http_request( ).
+        lo_http_client->enable_path_prefix( ).
+
+        IF is_req-method = 'PATCH'.
+          lo_request->set_header_field( i_name = 'If-Match' i_value = '*' ).
+        ENDIF.
+        IF is_req-etag IS NOT INITIAL.
+          lo_request->set_header_field( i_name = 'If-Match' i_value = is_req-etag ).
+        ENDIF.
+
+        lo_request->set_uri_path( i_uri_path = is_req-url ).
+
+        lo_request->set_header_field( i_name  = 'Accept'
+                                      i_value = 'application/json' ).
+        lo_http_client->set_csrf_token( ).
+
+        lo_request->set_content_type( 'application/json' ).
+        "设置报文
+        lo_request->set_text( is_req-body ).
+        "执行接口调用
+        DATA(lo_response) = lo_http_client->execute( lv_method ).
+        "接口返回报文
+        DATA(lv_res) = lo_response->get_text( ).
+        "接口返回状态
+        DATA(status) = lo_response->get_status( ).
+
+        es_resp-etag = lo_response->get_header_field( 'etag' ).
+
+        es_resp-body = lv_res.
+        es_resp-code = status-code.
+
+        lo_http_client->close( ).
+      CATCH cx_root INTO DATA(lr_root).
+
+    ENDTRY.
+
   ENDMETHOD.
 ENDCLASS.

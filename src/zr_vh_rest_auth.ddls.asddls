@@ -8,3 +8,5 @@ define view entity ZR_VH_REST_AUTH
   key a.value_low as value,
       a.text
 }
+//where
+//  a.language = $session.system_language

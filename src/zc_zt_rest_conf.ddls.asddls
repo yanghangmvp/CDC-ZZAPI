@@ -10,7 +10,7 @@ define root view entity ZC_ZT_REST_CONF
            Zzname,
            Zzisst,
 
-           @Consumption.valueHelpDefinition: [{ entity: { name: 'ZR_VH_STD_CLASS', element: 'ClassName' },useForValidation:true}]
+          // @Consumption.valueHelpDefinition: [{ entity: { name: 'ZR_VH_STD_CLASS', element: 'ClassName' },useForValidation:true}]
            Zzfname,
            Zzipara,
            Zzopara,

@@ -4,8 +4,7 @@
   <asx:values>
    <DDLS>
     <DDLNAME>ZR_VH_REST_AUTH</DDLNAME>
-    <DDLANGUAGE>E</DDLANGUAGE>
-    <DDTEXT>认证方式</DDTEXT>
+    <DDLANGUAGE>1</DDLANGUAGE>
     <SOURCE_TYPE>W</SOURCE_TYPE>
    </DDLS>
   </asx:values>

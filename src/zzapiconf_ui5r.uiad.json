@@ -1,13 +1,14 @@
 {
-  "formatVersion": "1",
+  "formatVersion": "2",
   "header": {
-    "description": "接口配置",
+    "description": "API配置",
     "originalLanguage": "zh",
     "abapLanguageVersion": "cloudDevelopment"
   },
   "generalInformation": {
     "appType": "ui5",
-    "catalogId": "SAP_TC_UI5_REPO_UIAD"
+    "catalogId": "SAP_TC_UI5_REPO_UIAD",
+    "targetMappingTitle": "API配置"
   },
   "ui5AppDetails": {
     "appId": "zzapiconf"
@@ -26,8 +27,8 @@
       "tileType": "static",
       "isDefault": true,
       "standard": {
-        "title": "接口配置",
-        "subtitle": "接口配置"
+        "title": "API配置",
+        "subtitle": "API配置"
       }
     }
   ]
